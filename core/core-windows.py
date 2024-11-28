@@ -61,7 +61,13 @@ class SAPI5:
         # By setting the audio device after changing voices seems to fix this
         # This was noted from information at:
         # http://lists.nvaccess.org/pipermail/nvda-dev/2011-November/022464.html
-        self.object.AudioOutput = self.object.AudioOutput
+
+        # Likewise, if this routine is not changed, then the pitch will sound higher than it should be.
+        # https://www.autohotkey.com/boards/viewtopic.php?t=33651#p232026
+        self.object.AllowAudioOutputFormatChangesOnNextSet = 0
+        self.object.AudioOutputStream.Format.Type = 39  # SAFT48kHz16BitStereo
+        self.object.AudioOutputStream = self.object.AudioOutputStream
+        self.object.AllowAudioOutputFormatChangesOnNextSet = 1
 
     def get_pitch(self):
         return self._pitch
